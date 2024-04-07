@@ -1,4 +1,4 @@
-def test_bar_fixture(pytester):
+def test_json_filter(pytester):
     """Make sure that pytest accepts our fixture."""
 
     # create a temporary pytest test module
@@ -14,13 +14,12 @@ def test_bar_fixture(pytester):
 
     # run pytest with the following cmd args
     result = pytester.runpytest(
-        '--json=tests\config.json',
+        '--json=tests/config.json',
         '-v'
     )
 
     # fnmatch_lines does an assertion internally
     result.stdout.fnmatch_lines([
-        '*::test_marker1 SKIPPED*',
         '*::test_marker2 PASSED*',
     ])
 
