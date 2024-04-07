@@ -17,7 +17,7 @@ def pytest_addoption(parser):
 def pytest_configure(config):
     for marker in markers_list:
         config.addinivalue_line(
-            marker, f"Enable if current setup supports {marker}"
+            "markers", f"{marker}: Enable if supported."
         )
         
 
