@@ -37,6 +37,9 @@ def test_json_filter1(pytester):
     result.stdout.no_fnmatch_line(
         '*::test_marker1 PASSED*',
     )
+    result.stdout.no_fnmatch_line(
+        '*::test_marker3 PASSED*'
+    )
 
     # make sure that we get a '0' exit code for the testsuite
     assert result.ret == 0
@@ -73,6 +76,50 @@ def test_json_filter2(pytester):
     ])
     result.stdout.no_fnmatch_line(
         '*::test_marker2 PASSED*'
+    )
+    result.stdout.no_fnmatch_line(
+        '*::test_marker3 PASSED*'
+    )
+
+    # make sure that we get a '0' exit code for the testsuite
+    assert result.ret == 0
+
+
+def test_json_filte3(pytester):
+    """Check that tests that are marked with at least one disabled marker is not executed."""
+
+    # create a temporary pytest test module
+    pytester.makepyfile("""
+        import pytest
+        
+        @pytest.mark.marker1
+        @pytest.mark.marker2
+        def test_marker1():
+            assert True
+            
+        @pytest.mark.marker2
+        def test_marker2():
+            assert True
+            
+        def test_marker3():
+            assert True
+    """)
+
+    # run pytest with the following cmd args
+    result = pytester.runpytest(
+        f'--json={config_json}',
+        '-vvv'
+    )
+
+    # fnmatch_lines does an assertion internally
+    result.stdout.fnmatch_lines([
+        '*::test_marker2 PASSED*',
+    ])
+    result.stdout.no_fnmatch_line(
+        '*::test_marker1 PASSED*'
+    )
+    result.stdout.no_fnmatch_line(
+        '*::test_marker3 PASSED*'
     )
 
     # make sure that we get a '0' exit code for the testsuite
