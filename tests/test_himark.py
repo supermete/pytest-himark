@@ -1,3 +1,9 @@
+from pathlib import Path
+
+current_directory = Path(__file__).parent
+config_json = current_directory.joinpath('config.json')
+
+
 def test_json_filter(pytester):
     """Make sure that pytest accepts our fixture."""
 
@@ -14,7 +20,7 @@ def test_json_filter(pytester):
 
     # run pytest with the following cmd args
     result = pytester.runpytest(
-        '--json=tests/config.json',
+        f'--json={config_json}',
         '-v'
     )
 
