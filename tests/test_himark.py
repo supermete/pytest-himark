@@ -5,7 +5,7 @@ config_json = current_directory.joinpath('config.json')
 
 
 def test_json_filter1(pytester):
-    """Make sure that pytest accepts our fixture."""
+    """Check that only tests matching the marker from config.json is executed."""
 
     # create a temporary pytest test module
     pytester.makepyfile("""
@@ -18,6 +18,9 @@ def test_json_filter1(pytester):
         @pytest.mark.marker2
         def test_marker2():
             assert True
+        
+        def test_marker3():
+            assert True
     """)
 
     # run pytest with the following cmd args
@@ -28,7 +31,10 @@ def test_json_filter1(pytester):
 
     # fnmatch_lines does an assertion internally
     result.stdout.fnmatch_lines([
-        'test_json_filter.py::test_marker2 PASSED',
+        '*::test_marker2 PASSED*',
+    ])
+    result.stdout.no_fnmatch_line([
+        '*::test_marker1 PASSED*',
     ])
 
     # make sure that we get a '0' exit code for the testsuite
@@ -36,7 +42,7 @@ def test_json_filter1(pytester):
 
 
 def test_json_filter2(pytester):
-    """Make sure that pytest accepts our fixture."""
+    """Check that only tests matching the marker from config.json is executed."""
 
     # create a temporary pytest test module
     pytester.makepyfile("""
@@ -49,6 +55,9 @@ def test_json_filter2(pytester):
         @pytest.mark.marker1
         def test_marker2():
             assert True
+            
+        def test_marker3():
+            assert True
     """)
 
     # run pytest with the following cmd args
@@ -59,7 +68,45 @@ def test_json_filter2(pytester):
 
     # fnmatch_lines does an assertion internally
     result.stdout.fnmatch_lines([
-        'test_json_filter.py::test_marker1 PASSED',
+        '*::test_marker1 PASSED*',
+    ])
+    result.stdout.no_fnmatch_line([
+        '*::test_marker2 PASSED*',
+    ])
+
+    # make sure that we get a '0' exit code for the testsuite
+    assert result.ret == 0
+
+
+def test_json_filter_none(pytester):
+    """Check that all tests are executed when no json is used or if all markers are disabled."""
+
+    # create a temporary pytest test module
+    pytester.makepyfile("""
+        import pytest
+        
+        @pytest.mark.marker2
+        def test_marker1():
+            assert True
+            
+        @pytest.mark.marker1
+        def test_marker2():
+            assert True
+        
+        def test_marker3():
+            assert True
+    """)
+
+    # run pytest with the following cmd args
+    result = pytester.runpytest(
+        '-vvv'
+    )
+
+    # fnmatch_lines does an assertion internally
+    result.stdout.fnmatch_lines([
+        '*::test_marker1 PASSED*',
+        '*::test_marker2 PASSED*',
+        '*::test_marker3 PASSED*',
     ])
 
     # make sure that we get a '0' exit code for the testsuite
