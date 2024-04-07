@@ -28,7 +28,7 @@ def test_json_filter(pytester):
 
     # fnmatch_lines does an assertion internally
     result.stdout.fnmatch_lines([
-        '*::test_marker2 PASSED*',
+        '::test_marker2 PASSED*',
     ])
 
     # make sure that we get a '0' exit code for the testsuite
