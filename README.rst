@@ -45,11 +45,13 @@ option and the path in the pytest.ini directly, in the addopts variable.
 
 Example:
     - pytest.ini:
+
     .. code-block:: INI
 
         addopts = --json=path/to/my/config.json
 
     - config.json:
+
 .. code-block:: JSON
 
         {
