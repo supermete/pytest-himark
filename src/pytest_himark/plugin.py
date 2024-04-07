@@ -13,6 +13,8 @@ def pytest_addoption(parser):
 
 def pytest_load_initial_conftests(args):
     json_path = None
+    markers_list = list()
+
     for arg in args:
         if arg.startswith("--json="):
             json_path = arg.replace("--json=", "")
@@ -22,11 +24,10 @@ def pytest_load_initial_conftests(args):
             config = json.load(file)
             markers = config.get("markers", list())
 
-    # lists the enabled markers
-    markers_list = list()
-    for marker in markers:
-        if markers.get(marker) is True:
-            markers_list.append(marker)
+        # lists the enabled markers
+        for marker in markers:
+            if markers.get(marker) is True:
+                markers_list.append(marker)
 
     # make an OR of the previously listed enabled markers and pass it with the -m option to the command line
     if len(markers_list) > 0:
