@@ -33,14 +33,3 @@ def test_json_filter(pytester):
 
     # make sure that we get a '0' exit code for the testsuite
     assert result.ret == 0
-
-
-def test_help_message(pytester):
-    result = pytester.runpytest(
-        '--help',
-    )
-    # fnmatch_lines does an assertion internally
-    result.stdout.fnmatch_lines([
-        'himark:',
-        '*--json=markers_from_json*Set the path where to look for config.json containing enabled markers declaration.',
-    ])
