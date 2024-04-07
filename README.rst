@@ -58,7 +58,8 @@ Example:
             "markers": {
                 "my_marker1": true,
                 "my_marker2": true,
-                "my_marker3": false
+                "my_marker3": false,
+                "my_marker4": false
             }
         }
 
@@ -68,7 +69,7 @@ Example:
 
 .. code-block:: python
 
-    >> pytest -m "my_marker1 or my_marker2"
+    >> pytest -m "(my_marker1 or my_marker2) and not (my_marker3 or my_marker4)"
 
 
 Contributing
