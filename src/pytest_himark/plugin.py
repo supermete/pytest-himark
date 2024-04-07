@@ -2,36 +2,31 @@ import json
 
 
 def pytest_addoption(parser):
-    group = parser.getgroup('himark')
-    group.addoption(
+    parser.addoption(
         '--json',
         action='store',
-        dest='JSON',
+        dest='markers_from_json',
         default='',
         help='Set the path where to look for config.json containing enabled markers declaration.'
     )
 
 
-def pytest_load_initial_conftests(early_config, parser, args):
-    group = parser.getgroup('himark')
-    json_path = group.options.json
+def pytest_load_initial_conftests(args):
+    json_path = None
+    for arg in args:
+        if arg.startswith("--json="):
+            json_path = arg.replace("--json=", "")
 
     with open(json_path, "r") as file:
         config = json.load(file)
-        hardware = config.get("markers", list())
-        metadata = config.get("metadata", list())
-
-    # add metadata from json
-    for data in metadata:
-        early_config._metadata[data] = metadata.get(data)
+        markers = config.get("markers", list())
 
     # lists the enabled markers
-    hwlist = list()
-    for hw in hardware:
-        if hardware.get(hw) is True:
-            hwlist.append(hw)
+    markers_list = list()
+    for marker in markers:
+        if markers.get(marker) is True:
+            markers_list.append(marker)
 
     # make an OR of the previously listed enabled markers and pass it with the -m option to the command line
-    if len(hwlist) > 0:
-        args[:] = ["-m", " or ".join(hwlist)] + args
-
+    if len(markers_list) > 0:
+        args[:] = ["-m", " or ".join(markers_list)] + args

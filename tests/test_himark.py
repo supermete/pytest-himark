@@ -35,5 +35,5 @@ def test_help_message(pytester):
     # fnmatch_lines does an assertion internally
     result.stdout.fnmatch_lines([
         'himark:',
-        '*--json=JSON*Set the path where to look for config.json containing enabled markers declaration.',
+        '*--json=markers_from_json*Set the path where to look for config.json containing enabled markers declaration.',
     ])
