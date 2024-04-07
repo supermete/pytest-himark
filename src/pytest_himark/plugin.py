@@ -1,5 +1,7 @@
 import json
 
+markers_list = list()
+
 
 def pytest_addoption(parser):
     group = parser.getgroup("himark")
@@ -12,7 +14,15 @@ def pytest_addoption(parser):
     )
 
 
+def pytest_configure(config):
+    for marker in markers_list:
+        config.addinivalue_line(
+            marker, f"Enable if current setup supports {marker}"
+        )
+        
+
 def pytest_load_initial_conftests(args):
+    global markers_list
     json_path = None
     markers_enabled = list()
     markers_disabled = list()
@@ -33,6 +43,7 @@ def pytest_load_initial_conftests(args):
             else:
                 markers_disabled.append(marker)
 
+    markers_list = markers_enabled + markers_disabled
     # make an OR of the previously listed enabled markers and pass it with the -m option to the command line
     if len(markers_enabled) > 0:
         args[:] = (["-m",
