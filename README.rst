@@ -43,8 +43,31 @@ You will simply need to add the --json option to the command line with the path 
 json containing the markers you want to enable. Alternatively, you can add the --json
 option and the path in the pytest.ini directly, in the addopts variable.
 
-Example (in pytest.ini):
-    addopts = --json path/to/my/config.json
+Example:
+    - pytest.ini:
+    .. code-block:: INI
+
+        addopts = --json=path/to/my/config.json
+
+    - config.json:
+.. code-block:: JSON
+
+        {
+            "markers": {
+                "my_marker1": true,
+                "my_marker2": true,
+                "my_marker3": false
+            }
+        }
+
+..
+
+    Launching pytest now will automatically add he following to the command line:
+
+.. code-block:: python
+
+    >> pytest -m "my_marker1 or my_marker2"
+
 
 Contributing
 ------------

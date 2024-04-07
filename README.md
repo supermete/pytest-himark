@@ -6,10 +6,10 @@
 
 [![See Build Status on GitHub Actions](https://github.com/supermete/pytest-himark/actions/workflows/main.yml/badge.svg)](https://github.com/supermete/pytest-himark/actions/workflows/main.yml)
 
-A plugin that reads a json file in your test root directory,
-searches the \'markers\' key, lists the markers declared as \'true\' as
-enabled markers and automatically adds -m option to the command line
-with an OR on the enabled markers.
+A plugin that reads a json file in your test root directory, searches
+the \'markers\' key, lists the markers declared as \'true\' as enabled
+markers and automatically adds -m option to the command line with an OR
+on the enabled markers.
 
 ------------------------------------------------------------------------
 
@@ -39,9 +39,32 @@ command line with the path to the json containing the markers you want
 to enable. Alternatively, you can add the \--json option and the path in
 the pytest.ini directly, in the addopts variable.
 
-Example (in pytest.ini):
+Example:
 
-:   addopts = \--json path/to/my/config.json
+- pytest.ini: 
+
+``` CFG
+    addopts = \--json=path/to/my/config.json
+```
+
+- config.json:
+
+``` JSON
+{
+    "markers": {
+        "my_marker1": true,
+        "my_marker2": true,
+        "my_marker3": false
+    }
+}
+```
+
+Launching pytest now will automatically add he following to the
+command line:
+
+``` python
+>> pytest -m "my_marker1 or my_marker2"
+```
 
 ## Contributing
 
