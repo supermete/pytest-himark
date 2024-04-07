@@ -2,7 +2,8 @@ import json
 
 
 def pytest_addoption(parser):
-    parser.addoption(
+    group = parser.getgroup("himark")
+    group.addoption(
         '--json',
         action='store',
         dest='markers_from_json',
