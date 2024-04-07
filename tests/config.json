@@ -1,0 +1,10 @@
+{
+    "markers": {
+        "marker1": false,
+        "marker2": true
+    },
+
+    "metadata": {
+        "description": "this is an additional metadata for potential report."
+    }
+}

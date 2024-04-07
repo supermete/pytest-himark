@@ -1,0 +1,39 @@
+def test_bar_fixture(pytester):
+    """Make sure that pytest accepts our fixture."""
+
+    # create a temporary pytest test module
+    pytester.makepyfile("""
+        @pytest.mark.marker1
+        def test_marker1():
+            assert True
+            
+        @pytest.mark.marker2
+        def test_marker2():
+            assert True
+    """)
+
+    # run pytest with the following cmd args
+    result = pytester.runpytest(
+        '--json=.\config.json',
+        '-v'
+    )
+
+    # fnmatch_lines does an assertion internally
+    result.stdout.fnmatch_lines([
+        '*::test_marker1 SKIPPED*',
+        '*::test_marker2 PASSED*',
+    ])
+
+    # make sure that we get a '0' exit code for the testsuite
+    assert result.ret == 0
+
+
+def test_help_message(pytester):
+    result = pytester.runpytest(
+        '--help',
+    )
+    # fnmatch_lines does an assertion internally
+    result.stdout.fnmatch_lines([
+        'himark:',
+        '*--json=JSON*Set the path where to look for config.json containing enabled markers declaration.',
+    ])
