@@ -14,7 +14,7 @@ def test_bar_fixture(pytester):
 
     # run pytest with the following cmd args
     result = pytester.runpytest(
-        '--json=.\config.json',
+        '--json=tests\config.json',
         '-v'
     )
 
