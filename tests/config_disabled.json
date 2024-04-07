@@ -1,6 +1,6 @@
 {
     "markers": {
         "marker1": false,
-        "marker2": true
+        "marker2": false
     }
 }
