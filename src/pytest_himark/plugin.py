@@ -17,9 +17,10 @@ def pytest_load_initial_conftests(args):
         if arg.startswith("--json="):
             json_path = arg.replace("--json=", "")
 
-    with open(json_path, "r") as file:
-        config = json.load(file)
-        markers = config.get("markers", list())
+    if json_path is not None:
+        with open(json_path, "r") as file:
+            config = json.load(file)
+            markers = config.get("markers", list())
 
     # lists the enabled markers
     markers_list = list()
