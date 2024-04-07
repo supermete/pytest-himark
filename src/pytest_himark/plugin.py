@@ -48,6 +48,6 @@ def pytest_load_initial_conftests(args):
     if len(markers_enabled) > 0:
         args[:] = (["-m",
                    (f'({" or ".join(markers_enabled)})' if len(markers_enabled) > 0 else '') +
-                   ('and' if len(markers_enabled) > 0 and len(markers_disabled) > 0 else '') +
-                   (f' and not ({" or ".join(markers_disabled)})' if len(markers_disabled) > 0 else '')]
+                   (' and ' if len(markers_enabled) > 0 and len(markers_disabled) > 0 else '') +
+                   (f'not ({" or ".join(markers_disabled)})' if len(markers_disabled) > 0 else '')]
                    + args)
