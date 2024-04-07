@@ -7,7 +7,7 @@ def pytest_addoption(parser):
         action='store',
         dest='markers_from_json',
         default='',
-        help='Set the path where to look for config.json containing enabled markers declaration.'
+        help='--json=markers_from_json. Set the path where to look for config.json containing enabled markers declaration.'
     )
 
 

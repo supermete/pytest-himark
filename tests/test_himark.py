@@ -9,6 +9,8 @@ def test_json_filter(pytester):
 
     # create a temporary pytest test module
     pytester.makepyfile("""
+        import pytest
+        
         @pytest.mark.marker1
         def test_marker1():
             assert True
