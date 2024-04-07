@@ -23,7 +23,7 @@ def test_json_filter(pytester):
     # run pytest with the following cmd args
     result = pytester.runpytest(
         f'--json={config_json}',
-        '-v'
+        '-vvv'
     )
 
     # fnmatch_lines does an assertion internally
