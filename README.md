@@ -6,10 +6,10 @@
 
 [![See Build Status on GitHub Actions](https://github.com/supermete/pytest-himark/actions/workflows/main.yml/badge.svg)](https://github.com/supermete/pytest-himark/actions/workflows/main.yml)
 
-A plugin that reads a json file in your test root directory, searches
-the \'markers\' key, lists the markers declared as \'true\' as enabled
-markers and automatically adds -m option to the command line with an OR
-on the enabled markers.
+A plugin that will filter pytest's test collection using a json file.  
+It will read a json file provided with a --json argument in pytest command line  
+(or in pytest.ini), search the *markers* key and automatically add -m option to  
+the command line for filtering out the tests marked with disabled markers.
 
 ------------------------------------------------------------------------
 
@@ -34,9 +34,9 @@ You can install \"pytest-himark\" via
 ## Usage
 
 After installing this plugin, pytest will automatically load it when
-launching tests. You will simply need to add the \--json option to the
+launching tests. You will simply need to add the --json option to the
 command line with the path to the json containing the markers you want
-to enable. Alternatively, you can add the \--json option and the path in
+to enable. Alternatively, you can add the --json option and the path in
 the pytest.ini directly, in the addopts variable.
 
 Example:
@@ -44,7 +44,7 @@ Example:
 - pytest.ini: 
 
 ``` CFG
-    addopts = \--json=path/to/my/config.json
+    addopts = --json=path/to/my/config.json
 ```
 
 - config.json:
