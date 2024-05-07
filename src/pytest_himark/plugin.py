@@ -42,13 +42,13 @@ def pytest_load_initial_conftests(args):
         for device in devices:
             if devices.get(device).get("used") is True:
                 markers_enabled.add(device)
+                # if device is enabled, check its outputs/inputs existence
+                for o in devices.get(device).get("outputs", list()):
+                    markers_enabled.add(o)
+                for i in devices.get(device).get("inputs", list()):
+                    markers_enabled.add(i)
             else:
                 markers_disabled.add(device)
-
-            for o in devices.get(device).get("outputs", list()):
-                markers_enabled.add(o)
-            for i in devices.get(device).get("inputs", list()):
-                markers_enabled.add(i)
 
         # lists the enabled markers
         for marker in markers:
