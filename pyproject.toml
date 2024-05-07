@@ -6,7 +6,65 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pytest-himark"
-description = "A plugin that will filter pytest's test collection using a json file. It will read a json file provided with a --json argument in pytest command line (or in pytest.ini), search the markers key and automatically add -m option to the command line for filtering out the tests marked with disabled markers."
+description = """
+This plugin aims to create markers automatically based on a json configuration.
+It adds a --json option and expects the path to a valid json file.
+The markers can be configured in 3 ways to give more flexibility to the end user.
+The first way is having a 'markers' key containing a dictionary with the name of the markers as key, and a boolean as a value.
+If the boolean is true, the marker with the specified name will be created.
+If a marker is specified but not enabled, it will be specifically filtered out in the final command line.
+
+Example:
+{
+    'markers': {
+        'marker1': true,
+        'marker2': true,
+        'marker3': false,
+        'marker4': false
+    }
+}
+This json will result in the following marker filtering: '-m (marker1 or marker2) and not (marker3 or marker4)'
+
+Another way of specifying markers is to define a 'devices' key, with a dictionary as value.
+Each key from the 'devices' dictionary can be refered to as a 'device' and should contain another dictionary, which should contain a key named 'used' with a boolean as a value.
+If the 'used' key of a device is set to true, a marker will be created and named after the said device.
+
+Example:
+{
+    'devices': {
+        'device1': {
+            'used': true,
+         }
+        'device2': {
+            'used': false,
+         }
+    }
+}
+This json will result in the following marker filtering: '-m (device1) and not (device2)'
+
+One last way to specifying markers is to have keys named 'outputs' and/or 'inputs' in a device-specific dictionary (see above), defined as list of strings.
+A marker will be created for every string in those arrays.
+
+Example:
+{
+    'devices': {
+        'device1': {
+            outputs: [
+                'output1'
+            ],
+            inputs: [
+                'intput1'
+            ]
+            'used': true,
+         }
+        'device2': {
+            'used': false,
+         }
+    }
+}
+This json will result in the following marker filtering: '-m (device1 or output1 or input1) and not (device2)'
+
+"""
 version = "0.1.3"
 readme = "README.rst"
 requires-python = ">=3.8"

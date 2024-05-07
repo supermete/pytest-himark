@@ -6,12 +6,12 @@
 
 [![See Build Status on GitHub Actions](https://github.com/supermete/pytest-himark/actions/workflows/main.yml/badge.svg)](https://github.com/supermete/pytest-himark/actions/workflows/main.yml)
 
-A plugin that will filter pytest's test collection using a json file.  
-It will read a json file provided with a --json argument in pytest command line  
-(or in pytest.ini), search the *markers* key and automatically add -m option to  
+A plugin that will filter pytest's test collection using a json file.
+It will read a json file provided with a --json argument in pytest command line
+(or in pytest.ini), search the *markers* key and automatically add -m option to
 the command line for filtering out the tests marked with disabled markers.
 
-------------------------------------------------------------------------
+---
 
 This [pytest](https://github.com/pytest-dev/pytest) plugin was generated
 with [Cookiecutter](https://github.com/audreyr/cookiecutter) along with
@@ -21,7 +21,7 @@ template.
 
 ## Requirements
 
--   json \>= 2.0.9
+- json \>= 2.0.9
 
 ## Installation
 
@@ -29,8 +29,7 @@ You can install \"pytest-himark\" via
 [pip](https://pypi.org/project/pip/) from
 [PyPI](https://pypi.org/project):
 
-    $ pip install pytest-himark
-
+$ pip install pytest-himark
 ## Usage
 
 After installing this plugin, pytest will automatically load it when
@@ -39,34 +38,92 @@ command line with the path to the json containing the markers you want
 to enable. Alternatively, you can add the --json option and the path in
 the pytest.ini directly, in the addopts variable.
 
-Example:
+- In pytest.ini:
 
-- pytest.ini: 
-
-``` CFG
+```CFG
     addopts = --json=path/to/my/config.json
 ```
+- Or by command line:
 
-- config.json:
+```CMD
+pytest --json=path/to/my/config.json
+```
+The markers can be configured in 3 ways to give more flexibility to the end user.
 
-``` JSON
+The first way is having a 'markers' keys containing a dictionary with the name of the markers as key, and a boolean as a value. If the boolean is true, the marker with the specified name will be created. If a marker is specified but not enabled, it will be specifically filtered out in the final command line.
+
+Example:
+
+```json
 {
-    "markers": {
-        "my_marker1": true,
-        "my_marker2": true,
-        "my_marker3": false,
-        "my_marker4": false
+    'markers': {
+        'marker1': true,
+        'marker2': true,
+        'marker3': false,
+        'marker4': false
     }
 }
 ```
+This json will result in the following marker filtering:
 
-Launching pytest now will automatically add he following to the
-command line:
-
-``` python
->> pytest -m "(my_marker1 or my_marker2) and not (my_marker3 or my_marker4)"
+```CMD
+-m '(marker1 or marker2) and not (marker3 or marker4)'
 ```
 
+Another way of specifying markers is to define a 'devices' key, with a dictionary as value. Each key from the 'devices' dictionary can be refered to as a 'device' and should contain another dictionary, which should contain a key named 'used' with a boolean as a value. If the 'used' key of a device is set to true, a marker will be created and named after the said device.
+
+Example:
+
+```json
+{
+    'devices': {
+        'device1': {
+            'used': true,
+         }
+        'device2': {
+            'used': false,
+         }
+    }
+}
+```
+This json will result in the following marker filtering:
+
+```CMD
+-m '(device1) and not (device2)'
+```
+
+One last way to specifying markers is to have keys named 'outputs' and/or 'inputs' in a device-specific dictionary (see above), defined as list of strings. A marker will be created for every string in those arrays.
+
+Example:
+
+```json
+{
+    'devices': {
+        'device1': {
+            outputs: [
+                'output1'
+            ],
+            inputs: [
+                'intput1'
+            ]
+            'used': true,
+         }
+        'device2': {
+            'used': false,
+         }
+    }
+}
+```
+This json will result in the following marker filtering:
+
+```CMD
+-m '(device1 or output1 or input1) and not (device2)'
+```
+Launching pytest now will automatically add the result filter to the command line, e.g.:
+
+```python
+>> pytest -m "(device1 or output1) and not (device2)"
+```
 ## Contributing
 
 Contributions are very welcome. Tests can be run with
