@@ -1,4 +1,30 @@
 {
+    "devices": {
+        "device1": {
+            "outputs": [
+                "marker3",
+                "marker4"
+            ],
+            "used": true
+        },
+        "device2": {
+            "inputs": [
+                "marker5",
+                "marker6"
+            ],
+            "used": true
+        },
+        "device3": {
+            "outputs": [
+                "marker7"
+            ],
+            "inputs": [
+                "marker8"
+            ],
+            "used": false
+        }
+    },
+
     "markers": {
         "marker1": false,
         "marker2": true

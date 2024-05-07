@@ -14,10 +14,7 @@ pytest-himark
     :target: https://github.com/supermete/pytest-himark/actions/workflows/main.yml
     :alt: See Build Status on GitHub Actions
 
-A plugin that will filter pytest's test collection using a json file.
-It will read a json file provided with a --json argument in pytest command line
-(or in pytest.ini), search the 'markers' key and automatically add -m option to
-the command line for filtering out the tests marked with disabled markers.
+pytest-himark is a plugin that creates markers from a json configuration to filter out pytest's test collection.
 
 ----
 
@@ -46,33 +43,110 @@ You will simply need to add the --json option to the command line with the path 
 json containing the markers you want to enable. Alternatively, you can add the --json
 option and the path in the pytest.ini directly, in the addopts variable.
 
-Example:
-    - pytest.ini:
+    - In pytest.ini:
 
     .. code-block:: INI
 
         addopts = --json=path/to/my/config.json
 
-    - config.json:
+    ..
+    - Or by command line:
+
+    .. code-block::
+
+        >> pytest --json=path/to/my/config.json
+
+    ..
+
+The markers can be configured in 3 ways to give more flexibility to the end user.
+The first way is having a 'markers' key containing a dictionary with the name of the markers as key, and a boolean as value.
+If the boolean is true, the marker with the specified name will be created, otherwise it will not.
+If a marker is specified but not disabled, it will be specifically filtered out in the final command line.
+
+Example:
 
 .. code-block:: JSON
 
-        {
-            "markers": {
-                "my_marker1": true,
-                "my_marker2": true,
-                "my_marker3": false,
-                "my_marker4": false
-            }
+    {
+        'markers': {
+            'marker1': true,
+            'marker2': true,
+            'marker3': false,
+            'marker4': false
         }
+    }
+..
+This json will result in the following marker filtering:
 
+.. code-block::
+
+    -m '(marker1 or marker2) and not (marker3 or marker4)'
 ..
 
-    Launching pytest now will automatically add he following to the command line:
+Another way of specifying marker is to define a 'devices' key, with a dictionary as value.
+Each key from the 'devices' dictionary can be refered to as a 'device' and should contain another dictionary, which should contain a key named 'used' with a boolean as a value.
+If the 'used' key of a device is set to true, a marker will be created and named after the said device.
+
+Example:
+
+.. code-block:: JSON
+
+    {
+        'devices': {
+            'device1': {
+                'used': true,
+             }
+            'device2': {
+                'used': false,
+             }
+        }
+    }
+..
+This json will result in the following marker filtering:
+
+.. code-block::
+
+    -m '(device1) and not (device2)'
+..
+
+One last way to specifying marker is to have keys named 'outputs' and/or 'inputs' in a device-specific dictionary (see above), defined as list of strings.
+A marker will be created for every string in those arrays.
+
+Example:
+
+.. code-block:: JSON
+
+    {
+        'devices': {
+            'device1': {
+                outputs: [
+                    'output1'
+                ],
+                inputs: [
+                    'intput1'
+                ]
+                'used': true,
+             }
+            'device2': {
+                'used': false,
+             }
+        }
+    }
+
+..
+This json will result in the following marker filtering:
+
+.. code-block::
+
+    -m '(device1 or output1 or input1) and not (device2)'
+..
+
+
+Launching pytest now will then automatically add the filter to the command line, e.g.:
 
 .. code-block:: python
 
-    >> pytest -m "(my_marker1 or my_marker2) and not (my_marker3 or my_marker4)"
+    >> pytest -m '(device1 or output1 or input1) and not (device2)'
 
 
 Contributing

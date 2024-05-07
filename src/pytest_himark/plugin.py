@@ -1,6 +1,6 @@
 import json
 
-markers_list = list()
+markers_list = set()
 
 
 def pytest_addoption(parser):
@@ -24,8 +24,9 @@ def pytest_configure(config):
 def pytest_load_initial_conftests(args):
     global markers_list
     json_path = None
-    markers_enabled = list()
-    markers_disabled = list()
+    devices_enabled = set()
+    markers_enabled = set()
+    markers_disabled = set()
 
     for arg in args:
         if arg.startswith("--json="):
@@ -34,16 +35,30 @@ def pytest_load_initial_conftests(args):
     if json_path is not None:
         with open(json_path, "r") as file:
             config = json.load(file)
+            devices = config.get("devices", list())
             markers = config.get("markers", list())
+
+        # lists the enabled devices and turn them into markers
+        for device in devices:
+            if devices.get(device).get("used") is True:
+                markers_enabled.add(device)
+                # if device is enabled, check its outputs/inputs existence
+                for o in devices.get(device).get("outputs", list()):
+                    markers_enabled.add(o)
+                for i in devices.get(device).get("inputs", list()):
+                    markers_enabled.add(i)
+            else:
+                markers_disabled.add(device)
 
         # lists the enabled markers
         for marker in markers:
             if markers.get(marker) is True:
-                markers_enabled.append(marker)
+                markers_enabled.add(marker)
             else:
-                markers_disabled.append(marker)
+                markers_disabled.add(marker)
 
-    markers_list = markers_enabled + markers_disabled
+    markers_enabled = set(filter(None, markers_enabled))
+    markers_list = markers_enabled.union(markers_disabled)
     # make an OR of the previously listed enabled markers and pass it with the -m option to the command line
     if len(markers_enabled) > 0:
         args[:] = (["-m",
