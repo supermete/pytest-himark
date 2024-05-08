@@ -39,8 +39,9 @@ def pytest_load_initial_conftests(args):
 
         # lists the enabled devices and turn them into markers
         for device in devices:
+            name = device.get("name", None)
             if device.get("used") is True:
-                markers_enabled.add(device.get("name"))
+                markers_enabled.add(name)
                 # if device is enabled, check its outputs/inputs existence
                 for x in device.get("do", list()):
                     markers_enabled.add(x)
@@ -51,7 +52,7 @@ def pytest_load_initial_conftests(args):
                 for x in device.get("ao", list()):
                     markers_enabled.add(x)
             else:
-                markers_disabled.add(device)
+                markers_disabled.add(name)
 
         # lists the enabled markers
         for marker in markers:
@@ -61,6 +62,7 @@ def pytest_load_initial_conftests(args):
                 markers_disabled.add(marker)
 
     markers_enabled = set(filter(None, markers_enabled))
+    markers_disabled = set(filter(None, markers_disabled))
     markers_list = markers_enabled.union(markers_disabled)
     # make an OR of the previously listed enabled markers and pass it with the -m option to the command line
     if len(markers_enabled) > 0:
