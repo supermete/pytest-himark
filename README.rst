@@ -83,23 +83,25 @@ This json will result in the following marker filtering:
     -m '(marker1 or marker2) and not (marker3 or marker4)'
 ..
 
-Another way of specifying marker is to define a 'devices' key, with a dictionary as value.
-Each key from the 'devices' dictionary can be refered to as a 'device' and should contain another dictionary, which should contain a key named 'used' with a boolean as a value.
-If the 'used' key of a device is set to true, a marker will be created and named after the said device.
+Another way of specifying marker is to define a 'devices' key, with a list of dictionaries as value.
+Each key from the 'devices' list can be refered to as a 'device' and should contain a key named 'name' as a string and a key named 'used' as a boolean.
+If the 'used' key of a device is set to true, a marker will be created and named with the 'name' string.
 
 Example:
 
 .. code-block:: JSON
 
     {
-        'devices': {
-            'device1': {
+        'devices': [
+             {
+                'name': "device1",
                 'used': true,
-             }
-            'device2': {
+             },
+             {
+                'name': "device2",
                 'used': false,
              }
-        }
+        ]
     }
 ..
 This json will result in the following marker filtering:

@@ -1,13 +1,15 @@
 {
-    "devices": {
-        "device1": {
+    "devices": [
+        {
+            "name":  "device1",
             "do": [
                 "marker3",
                 "marker4"
             ],
             "used": true
         },
-        "device2": {
+        {
+            "name":  "device2",
             "di": [
                 "marker5"
             ],
@@ -16,7 +18,8 @@
             ],
             "used": true
         },
-        "device3": {
+        {
+            "name":  "device3",
             "do": [
                 "marker7"
             ],
@@ -25,7 +28,7 @@
             ],
             "used": false
         }
-    },
+    ],
 
     "markers": {
         "marker1": false,
