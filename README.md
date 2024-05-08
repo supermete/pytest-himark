@@ -30,6 +30,7 @@ You can install \"pytest-himark\" via
 [PyPI](https://pypi.org/project):
 
 $ pip install pytest-himark
+
 ## Usage
 
 After installing this plugin, pytest will automatically load it when
@@ -43,11 +44,13 @@ the pytest.ini directly, in the addopts variable.
 ```CFG
     addopts = --json=path/to/my/config.json
 ```
+
 - Or by command line:
 
 ```CMD
 pytest --json=path/to/my/config.json
 ```
+
 The markers can be configured in 3 ways to give more flexibility to the end user.
 
 The first way is having a 'markers' keys containing a dictionary with the name of the markers as key, and a boolean as a value. If the boolean is true, the marker with the specified name will be created. If a marker is specified but not enabled, it will be specifically filtered out in the final command line.
@@ -64,6 +67,7 @@ Example:
     }
 }
 ```
+
 This json will result in the following marker filtering:
 
 ```CMD
@@ -86,13 +90,14 @@ Example:
     }
 }
 ```
+
 This json will result in the following marker filtering:
 
 ```CMD
 -m '(device1) and not (device2)'
 ```
 
-One last way to specifying markers is to have keys named 'outputs' and/or 'inputs' in a device-specific dictionary (see above), defined as list of strings. A marker will be created for every string in those arrays.
+One last way to specifying markers is to have keys named 'do', 'di' and/or 'ai' in a device-specific dictionary (see above), defined as list of strings. A marker will be created for every string in those arrays.
 
 Example:
 
@@ -100,12 +105,15 @@ Example:
 {
     'devices': {
         'device1': {
-            outputs: [
-                'output1'
+            do: [
+                'do1'
             ],
-            inputs: [
-                'intput1'
-            ]
+            di: [
+                'di1'
+            ],
+            ai: [
+                'ai1'
+            ],
             'used': true,
          }
         'device2': {
@@ -114,16 +122,19 @@ Example:
     }
 }
 ```
+
 This json will result in the following marker filtering:
 
 ```CMD
--m '(device1 or output1 or input1) and not (device2)'
+-m '(device1 or do1 or di1 or ai1) and not (device2)'
 ```
+
 Launching pytest now will automatically add the result filter to the command line, e.g.:
 
 ```python
->> pytest -m "(device1 or output1) and not (device2)"
+>> pytest -m "(device1 or do1 or di1 or ai1) and not (device2)"
 ```
+
 ## Contributing
 
 Contributions are very welcome. Tests can be run with

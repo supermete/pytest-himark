@@ -109,7 +109,7 @@ This json will result in the following marker filtering:
     -m '(device1) and not (device2)'
 ..
 
-One last way to specifying marker is to have keys named 'outputs' and/or 'inputs' in a device-specific dictionary (see above), defined as list of strings.
+One last way to specifying marker is to have keys named 'do', 'di' and/or 'ai' in a device-specific dictionary (see above), defined as list of strings.
 A marker will be created for every string in those arrays.
 
 Example:
@@ -119,12 +119,15 @@ Example:
     {
         'devices': {
             'device1': {
-                outputs: [
-                    'output1'
+                do: [
+                    'do1'
                 ],
-                inputs: [
-                    'intput1'
-                ]
+                di: [
+                    'di1'
+                ],
+                ai: [
+                    'ai1'
+                ],
                 'used': true,
              }
             'device2': {
@@ -138,7 +141,7 @@ This json will result in the following marker filtering:
 
 .. code-block::
 
-    -m '(device1 or output1 or input1) and not (device2)'
+    -m '(device1 or do1 or di1 or ai1) and not (device2)'
 ..
 
 
@@ -146,7 +149,7 @@ Launching pytest now will then automatically add the filter to the command line,
 
 .. code-block:: python
 
-    >> pytest -m '(device1 or output1 or input1) and not (device2)'
+    >> pytest -m '(device1 or do1 or di1 or ai1) and not (device2)'
 
 
 Contributing
