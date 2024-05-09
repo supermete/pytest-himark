@@ -17,13 +17,14 @@ def pytest_collection_modifyitems(config, items):
         markers = list(filter(lambda x: x != '', markers.split(" or ")))
 
         new_items = list()
-        for item in reversed(items):
+        for item in items:
             for marker in item.iter_markers():
                 if marker.name not in markers:
                     break
             else:
                 new_items.append(item)
         items[:] = new_items
+        print(f"markers: {markers}")
 
 
 def pytest_addoption(parser):
