@@ -1,7 +1,7 @@
 {
     "devices": [
         {
-            "name":  "device1",
+            "name": "device1",
             "do": [
                 "marker3",
                 "marker4"
@@ -9,7 +9,8 @@
             "used": true
         },
         {
-            "name":  "device2",
+            "name": "device2",
+            "type": "type_device2",
             "di": [
                 "marker5"
             ],
@@ -19,7 +20,7 @@
             "used": true
         },
         {
-            "name":  "device3",
+            "name": "device3",
             "do": [
                 "marker7"
             ],
