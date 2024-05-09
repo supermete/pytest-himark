@@ -193,7 +193,7 @@ def test_json_filter_device(pytester):
 
 def test_json_undefined_marker(pytester):
     """
-    Check that collected tests with undefined markers are fitlered out.
+    Check that collected tests with undefined markers are filtered out.
     test_device2_type2 is marked by one marker that should be created, and one that shouldn't so it should not pass.
 
     :param pytester: fixture
@@ -227,6 +227,7 @@ def test_json_undefined_marker(pytester):
 
     # fnmatch_lines does an assertion internally
     result.stdout.fnmatch_lines([
+        '*filtered: 1 selected*',
         '*::test_device2_type1 PASSED*',
     ])
     result.stdout.no_fnmatch_line(
