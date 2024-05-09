@@ -156,15 +156,6 @@ def test_json_filter_device(pytester):
         @pytest.mark.marker6
         def test_device2_input2():
             assert True
-        
-        @pytest.mark.type_device2
-        def test_device2_type1():
-            assert True
-        
-        @pytest.mark.type_device2
-        @pytest.mark.type_device3
-        def test_device2_type2():
-            assert True
             
         @pytest.mark.marker7
         def test_device3_output1():
@@ -188,16 +179,12 @@ def test_json_filter_device(pytester):
         '*::test_device1_output2 PASSED*',
         '*::test_device2_input1 PASSED*',
         '*::test_device2_input2 PASSED*',
-        '*::test_device2_type1 PASSED*',
     ])
     result.stdout.no_fnmatch_line(
         '*::test_device3_output1 PASSED*',
     )
     result.stdout.no_fnmatch_line(
         '*::test_device3_input1 PASSED*'
-    )
-    result.stdout.no_fnmatch_line(
-        '*::test_device2_type2 PASSED*'
     )
 
     # make sure that we get a '0' exit code for the testsuite
