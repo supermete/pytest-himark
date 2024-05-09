@@ -30,6 +30,7 @@ You can install \"pytest-himark\" via
 [PyPI](https://pypi.org/project):
 
 $ pip install pytest-himark
+
 ## Usage
 
 After installing this plugin, pytest will automatically load it when
@@ -43,11 +44,13 @@ the pytest.ini directly, in the addopts variable.
 ```CFG
     addopts = --json=path/to/my/config.json
 ```
+
 - Or by command line:
 
 ```CMD
 pytest --json=path/to/my/config.json
 ```
+
 The markers can be configured in 3 ways to give more flexibility to the end user.
 
 The first way is having a 'markers' keys containing a dictionary with the name of the markers as key, and a boolean as a value. If the boolean is true, the marker with the specified name will be created. If a marker is specified but not enabled, it will be specifically filtered out in the final command line.
@@ -64,35 +67,39 @@ Example:
     }
 }
 ```
+
 This json will result in the following marker filtering:
 
 ```CMD
 -m '(marker1 or marker2) and not (marker3 or marker4)'
 ```
 
-Another way of specifying markers is to define a 'devices' key, with a dictionary as value. Each key from the 'devices' dictionary can be refered to as a 'device' and should contain another dictionary, which should contain a key named 'used' with a boolean as a value. If the 'used' key of a device is set to true, a marker will be created and named after the said device.
+Another way of specifying markers is to define a 'devices' key, with a list of dictionaries as value. Each key from the list can be refered to as a 'device' and should contain a key named 'name' as a string and a key named 'used' as a boolean. If the 'used' key of a device is set to true, a marker will be created and named with the 'name' string.
 
 Example:
 
 ```json
 {
-    'devices': {
-        'device1': {
+    'devices': [
+         {
+            'name': 'device1',
             'used': true,
-         }
-        'device2': {
+         },
+         {
+            'name': 'device2',
             'used': false,
          }
     }
 }
 ```
+
 This json will result in the following marker filtering:
 
 ```CMD
 -m '(device1) and not (device2)'
 ```
 
-One last way to specifying markers is to have keys named 'outputs' and/or 'inputs' in a device-specific dictionary (see above), defined as list of strings. A marker will be created for every string in those arrays.
+One last way to specifying markers is to have keys named 'do', 'di' and/or 'ai' in a device-specific dictionary (see above), defined as list of strings. A marker will be created for every string in those arrays.
 
 Example:
 
@@ -100,12 +107,15 @@ Example:
 {
     'devices': {
         'device1': {
-            outputs: [
-                'output1'
+            do: [
+                'do1'
             ],
-            inputs: [
-                'intput1'
-            ]
+            di: [
+                'di1'
+            ],
+            ai: [
+                'ai1'
+            ],
             'used': true,
          }
         'device2': {
@@ -114,16 +124,19 @@ Example:
     }
 }
 ```
+
 This json will result in the following marker filtering:
 
 ```CMD
--m '(device1 or output1 or input1) and not (device2)'
+-m '(device1 or do1 or di1 or ai1) and not (device2)'
 ```
+
 Launching pytest now will automatically add the result filter to the command line, e.g.:
 
 ```python
->> pytest -m "(device1 or output1) and not (device2)"
+>> pytest -m "(device1 or do1 or di1 or ai1) and not (device2)"
 ```
+
 ## Contributing
 
 Contributions are very welcome. Tests can be run with

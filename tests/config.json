@@ -1,29 +1,34 @@
 {
-    "devices": {
-        "device1": {
-            "outputs": [
+    "devices": [
+        {
+            "name":  "device1",
+            "do": [
                 "marker3",
                 "marker4"
             ],
             "used": true
         },
-        "device2": {
-            "inputs": [
-                "marker5",
+        {
+            "name":  "device2",
+            "di": [
+                "marker5"
+            ],
+            "ai": [
                 "marker6"
             ],
             "used": true
         },
-        "device3": {
-            "outputs": [
+        {
+            "name":  "device3",
+            "do": [
                 "marker7"
             ],
-            "inputs": [
+            "di": [
                 "marker8"
             ],
             "used": false
         }
-    },
+    ],
 
     "markers": {
         "marker1": false,

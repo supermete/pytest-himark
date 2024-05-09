@@ -24,7 +24,6 @@ def pytest_configure(config):
 def pytest_load_initial_conftests(args):
     global markers_list
     json_path = None
-    devices_enabled = set()
     markers_enabled = set()
     markers_disabled = set()
 
@@ -40,15 +39,20 @@ def pytest_load_initial_conftests(args):
 
         # lists the enabled devices and turn them into markers
         for device in devices:
-            if devices.get(device).get("used") is True:
-                markers_enabled.add(device)
+            name = device.get("name", None)
+            if device.get("used") is True:
+                markers_enabled.add(name)
                 # if device is enabled, check its outputs/inputs existence
-                for o in devices.get(device).get("outputs", list()):
-                    markers_enabled.add(o)
-                for i in devices.get(device).get("inputs", list()):
-                    markers_enabled.add(i)
+                for x in device.get("do", list()):
+                    markers_enabled.add(x)
+                for x in device.get("di", list()):
+                    markers_enabled.add(x)
+                for x in device.get("ai", list()):
+                    markers_enabled.add(x)
+                for x in device.get("ao", list()):
+                    markers_enabled.add(x)
             else:
-                markers_disabled.add(device)
+                markers_disabled.add(name)
 
         # lists the enabled markers
         for marker in markers:
@@ -58,6 +62,7 @@ def pytest_load_initial_conftests(args):
                 markers_disabled.add(marker)
 
     markers_enabled = set(filter(None, markers_enabled))
+    markers_disabled = set(filter(None, markers_disabled))
     markers_list = markers_enabled.union(markers_disabled)
     # make an OR of the previously listed enabled markers and pass it with the -m option to the command line
     if len(markers_enabled) > 0:
