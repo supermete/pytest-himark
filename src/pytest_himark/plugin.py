@@ -11,17 +11,19 @@ def pytest_collection_finish(session):
 
 @pytest.hookimpl(trylast=True)
 def pytest_collection_modifyitems(config, items):
-    markers = config.getoption('-m').replace("(", "").replace(")", "")
-    markers = list(filter(lambda x: x != '', markers.split(" or ")))
+    option = config.getoption('-m')
+    if option is not None:
+        markers = option.replace("(", "").replace(")", "")
+        markers = list(filter(lambda x: x != '', markers.split(" or ")))
 
-    new_items = list()
-    for item in reversed(items):
-        for marker in item.iter_markers():
-            if marker.name not in markers:
-                break
-        else:
-            new_items.append(item)
-    items[:] = new_items
+        new_items = list()
+        for item in reversed(items):
+            for marker in item.iter_markers():
+                if marker.name not in markers:
+                    break
+            else:
+                new_items.append(item)
+        items[:] = new_items
 
 
 def pytest_addoption(parser):
@@ -84,4 +86,4 @@ def pytest_load_initial_conftests(args):
     markers_list = markers_enabled
     # make an OR of the previously listed enabled markers and pass it with the -m option to the command line
     if len(markers_enabled) > 0:
-        args[:] = (["-m", (f'({" or ".join(markers_enabled)})' if len(markers_enabled) > 0 else '')] + args)
+        args[:] = (["-m", f'({" or ".join(markers_enabled)})'] + args)
