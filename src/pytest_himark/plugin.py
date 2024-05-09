@@ -6,7 +6,7 @@ markers_list = set()
 
 @pytest.hookimpl(trylast=True)
 def pytest_collection_finish(session):
-    print(f"after filtering out undefined markers: {len(session.items)} selected")
+    print(f"filtered: {len(session.items)} selected")
 
 
 @pytest.hookimpl(trylast=True)
@@ -24,7 +24,6 @@ def pytest_collection_modifyitems(config, items):
             else:
                 new_items.append(item)
         items[:] = new_items
-        print(f"markers: {markers}")
 
 
 def pytest_addoption(parser):
