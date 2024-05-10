@@ -65,7 +65,7 @@ Example:
 This json will result in the following marker filtering: '-m (device1 or output1 or input1) and not (device2)'
 
 """
-version = "0.1.3"
+version = "0.2.0"
 readme = "README.rst"
 requires-python = ">=3.8"
 authors = [
