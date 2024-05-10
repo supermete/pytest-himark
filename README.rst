@@ -43,14 +43,15 @@ You will simply need to add the --json option to the command line with the path 
 json containing the markers you want to enable. Alternatively, you can add the --json
 option and the path in the pytest.ini directly, in the addopts variable.
 
-    - In pytest.ini:
+- In pytest.ini:
 
     .. code-block:: INI
 
         addopts = --json=path/to/my/config.json
 
     ..
-    - Or by command line:
+
+- Or by command line:
 
     .. code-block::
 
@@ -75,6 +76,7 @@ Example:
         }
     }
 ..
+
 This json will result in the following marker filtering:
 
 .. code-block::
@@ -103,6 +105,7 @@ Example:
         ]
     }
 ..
+
 This json will result in the following marker filtering:
 
 .. code-block::
@@ -169,6 +172,7 @@ Example:
     }
 
 ..
+
 This json will result in the following marker filtering:
 
 .. code-block::
