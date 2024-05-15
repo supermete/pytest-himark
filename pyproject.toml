@@ -9,60 +9,106 @@ name = "pytest-himark"
 description = """
 This plugin aims to create markers automatically based on a json configuration.
 It adds a --json option and expects the path to a valid json file.
-The markers can be configured in 3 ways to give more flexibility to the end user.
-The first way is having a 'markers' key containing a dictionary with the name of the markers as key, and a boolean as a value.
+The markers can be configured in 4 ways to give more flexibility to the end user.
+The first way is having a 'markers' key containing a dictionary with the name of the markers as key, and a boolean as value.
 If the boolean is true, the marker with the specified name will be created.
-If a marker is specified but not enabled, it will be specifically filtered out in the final command line.
 
 Example:
 {
-    'markers': {
-        'marker1': true,
-        'marker2': true,
-        'marker3': false,
-        'marker4': false
+    "": {
+        "marker1": true,
+        "marker2": true,
+        "marker3": false,
+        "marker4": false
     }
 }
-This json will result in the following marker filtering: '-m (marker1 or marker2) and not (marker3 or marker4)'
+This json will result in the following marker filtering: '-m (marker1 or marker2)'
 
-Another way of specifying markers is to define a 'devices' key, with a dictionary as value.
-Each key from the 'devices' dictionary can be refered to as a 'device' and should contain another dictionary, which should contain a key named 'used' with a boolean as a value.
-If the 'used' key of a device is set to true, a marker will be created and named after the said device.
+Another way of specifying marker is to define a 'devices' key, with a list of dictionaries as value.
+Each key from the 'devices' list can be refered to as a 'device' and should contain a key named 'name' as a string and a key named 'used' as a boolean.
+If the 'used' key of a device is set to true, a marker will be created and named with the 'name' string.
 
 Example:
 {
-    'devices': {
-        'device1': {
-            'used': true,
+    "devices": [
+         {
+            "name": "device1",
+            "used": true,
+         },
+         {
+            "name": "device2",
+            "used": false,
          }
-        'device2': {
+    ]
+}
+This json will result in the following marker filtering: '-m (device1)'
+
+Another way to specifying marker is to have a key named 'type' in a device-specific dictionary (see above), defined as a string.
+A marker with the string value of the 'type' will be created.
+
+Example:
+{
+    'devices': [
+         {
+            'name': "device1",
+            'type': "my_type"
+            'used': true,
+         },
+         {
+            'name': "device2",
             'used': false,
          }
-    }
+    ]
 }
-This json will result in the following marker filtering: '-m (device1) and not (device2)'
 
-One last way to specifying markers is to have keys named 'outputs' and/or 'inputs' in a device-specific dictionary (see above), defined as list of strings.
+This json will result in the following marker filtering: '-m (device1 or my_type)'
+
+One last way to specifying marker is to have keys named 'do', 'di' and/or 'ai' in a device-specific dictionary (see above), defined as list of strings.
 A marker will be created for every string in those arrays.
 
 Example:
+    {
+        'devices': [
+            {
+                "name": "device1",
+                "do": [
+                    "do1"
+                ],
+                "di": [
+                    "di1"
+                ],
+                "ai": [
+                    "ai1"
+                ],
+                "used": true,
+             }
+            {
+                "name": "device2",
+                "used": false,
+             }
+        ]
+    }
+This json will result in the following marker filtering: '-m (device1 or do1 or di1 or ai1)'
+
+Finally, after pytest test collection has completed, this plugin will also filter out any test that is marked with an undefined marker.
+For example consider the following config:
+
 {
-    'devices': {
-        'device1': {
-            outputs: [
-                'output1'
-            ],
-            inputs: [
-                'intput1'
-            ]
-            'used': true,
-         }
-        'device2': {
-            'used': false,
-         }
+    'markers': {
+        'marker1': true
     }
 }
-This json will result in the following marker filtering: '-m (device1 or output1 or input1) and not (device2)'
+
+And the following test:
+
+@pytest.mark.marker1
+@pytest.mark.marker2
+def test_mytest():
+    assert True
+
+This test is marked with *marker1* which is defined in the configuration, but also with *marker2* which is not. Therefore, despite being initially collected by pytest, this plugin will remove it from the selection.
+
+Note that any empty string as marker will be ignored by the plugin, and any leading or trailing spaces will be removed.
 
 """
 version = "0.2.0"

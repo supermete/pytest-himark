@@ -164,8 +164,6 @@ Launching pytest now will automatically add the result filter to the command lin
 >> pytest -m "(device1 or do1 or di1 or ai1)"
 ```
 
-
-
 Finally, after pytest test collection has completed, this plugin will also filter out any test that is marked with an undefined marker.
 
 For example consider the following config:
@@ -188,6 +186,8 @@ def test_mytest():
 ```
 
 This test is marked with *marker1* which is defined in the configuration, but also with *marker2* which is not. Therefore, despite being initially collected by pytest, this plugin will remove it from the selection.
+
+Note that any empty string as marker will be ignored by the plugin, and any leading or trailing spaces will be removed.
 
 
 ## Contributing
