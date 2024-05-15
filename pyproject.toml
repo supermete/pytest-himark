@@ -111,7 +111,7 @@ This test is marked with *marker1* which is defined in the configuration, but al
 Note that any empty string as marker will be ignored by the plugin, and any leading or trailing spaces will be removed.
 
 """
-version = "0.2.0"
+version = "0.2.1"
 readme = "README.rst"
 requires-python = ">=3.8"
 authors = [
