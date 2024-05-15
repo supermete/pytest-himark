@@ -62,25 +62,30 @@ def pytest_load_initial_conftests(args):
         # lists the enabled devices and turn them into markers
         for device in devices:
             name = device.get("name", None)
-            if device.get("used") is True:
-                markers_enabled.add(name)
+            if device.get("used") is True and name.strip() != "":
+                markers_enabled.add(name.strip())
                 # if device is enabled, check its do/di/ai/ao lists existence
                 for x in device.get("do", list()):
-                    markers_enabled.add(x)
+                    if x.strip() != "":
+                        markers_enabled.add(x.strip())
                 for x in device.get("di", list()):
-                    markers_enabled.add(x)
+                    if x.strip() != "":
+                        markers_enabled.add(x.strip())
                 for x in device.get("ai", list()):
-                    markers_enabled.add(x)
+                    if x.strip() != "":
+                        markers_enabled.add(x.strip())
                 for x in device.get("ao", list()):
-                    markers_enabled.add(x)
+                    if x.strip() != "":
+                        markers_enabled.add(x.strip())
                 # make a marker for 'type' key if it exists
-                if device.get("type", None) is not None:
-                    markers_enabled.add(device.get("type"))
+                type = device.get("type", None)
+                if type is not None and type.strip() != "":
+                    markers_enabled.add(type.strip())
 
         # lists the enabled markers
         for marker in markers:
-            if markers.get(marker) is True:
-                markers_enabled.add(marker)
+            if marker.strip() != "" and markers.get(marker) is True:
+                markers_enabled.add(marker.strip())
 
     markers_enabled = set(filter(None, markers_enabled))
     markers_list = markers_enabled
