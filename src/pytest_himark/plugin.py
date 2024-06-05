@@ -19,7 +19,7 @@ def pytest_collection_modifyitems(config, items):
         new_items = list()
         for item in items:
             for marker in item.iter_markers():
-                if marker.name not in markers:
+                if marker.name != "parametrize" and marker.name not in markers:
                     break
             else:
                 new_items.append(item)
